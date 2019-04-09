@@ -49,5 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TheWorldFactbookLib\TheWorldFactbookLib.csproj">
+      <Project>{1cb20b0a-b9f7-4f31-b27e-965d76049913}</Project>
+      <Name>TheWorldFactbookLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
