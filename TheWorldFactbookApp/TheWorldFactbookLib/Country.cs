@@ -24,7 +24,7 @@ namespace TheWorldFactbookLib
     }
     public class Economy
     {
-        public long GDPtotal;
+        public long GDPnominal;
         public long GDPppp;
     }
 }

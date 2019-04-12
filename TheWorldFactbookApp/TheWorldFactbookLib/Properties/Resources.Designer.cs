@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TheWorldFactbookApp.Properties {
+namespace TheWorldFactbookLib.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace TheWorldFactbookApp.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TheWorldFactbookApp.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TheWorldFactbookLib.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,33 @@ namespace TheWorldFactbookApp.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
+        ///&lt;ArrayOfCountry xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///  &lt;Country&gt;
+        ///    &lt;Name&gt;Afghanistan&lt;/Name&gt;
+        ///    &lt;Capital&gt;Kabul&lt;/Capital&gt;
+        ///    &lt;Geography&gt;
+        ///      &lt;TotalArea&gt;652230&lt;/TotalArea&gt;
+        ///    &lt;/Geography&gt;
+        ///    &lt;Population&gt;
+        ///      &lt;Amount&gt;34940837&lt;/Amount&gt;
+        ///    &lt;/Population&gt;
+        ///    &lt;Economy&gt;
+        ///      &lt;GDPnominal&gt;66209&lt;/GDPnominal&gt;
+        ///      &lt;GDPppp&gt;2000&lt;/GDPppp&gt;
+        ///    &lt;/Economy&gt;
+        ///  &lt;/Country&gt;
+        ///  &lt;Country&gt;
+        ///    &lt;Name&gt;Albania&lt;/Name&gt;
+        ///    &lt;C [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string CIACountries {
+            get {
+                return ResourceManager.GetString("CIACountries", resourceCulture);
             }
         }
     }
