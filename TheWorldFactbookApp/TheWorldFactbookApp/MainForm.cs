@@ -75,5 +75,26 @@ namespace TheWorldFactbookApp
         {
             MessageBox.Show(@"You clicked New button!!!", @"Information!!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        private void DeleteButton_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                DataRow[] dataRows = new DataRow[dataGridView1.SelectedRows.Count];
+                for (int i = 0; i< dataGridView1.SelectedRows.Count; i++)
+                {
+                    dataRows[i] = ((DataRowView)dataGridView1.SelectedRows[i].DataBoundItem).Row;
+                }
+                for (int i = 0; i < dataRows.Length; i++)
+                {
+                    table.Rows.Remove(dataRows[i]) ;
+                }
+                countLabel.Text = table.Rows.Count.ToString();
+            } 
+            else
+            {
+                MessageBox.Show(@"Delete: please select at least one row", @"Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
     }
 }
