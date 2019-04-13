@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using TheWorldFactbookLib;
 
-namespace TheWorldFactbookApp
+namespace TheWorldFactbookApp.Forms
 {
     public partial class MainForm : Form
     {
@@ -20,12 +20,12 @@ namespace TheWorldFactbookApp
         {
             InitializeComponent();
             dataGridView1.DataSource = table;
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Capital", typeof(string));
-            table.Columns.Add("Total Area (sq km)", typeof(long));
-            table.Columns.Add("Population", typeof(long));
-            table.Columns.Add("GDP nominal (mln usd)", typeof(long));
-            table.Columns.Add("GDP ppp (usd)", typeof(long));
+            table.Columns.Add(Country.NameLabel, typeof(string));
+            table.Columns.Add(Country.CapitalLabel, typeof(string));
+            table.Columns.Add(Geography.TotalAreaLabel, typeof(long));
+            table.Columns.Add(Population.AmountLabel, typeof(long));
+            table.Columns.Add(Economy.GDPNominalLabel, typeof(long));
+            table.Columns.Add(Economy.GDPpppLabel, typeof(long));
             countLabel.Text = "0";
         }
         private void Form_load(object sender, EventArgs e)
@@ -41,19 +41,29 @@ namespace TheWorldFactbookApp
             for (int i = 0; i<countries.Length; i++)
             {
                 DataRow dr = table.NewRow();
-                dr["Name"] = countries[i].Name;
-                dr["Capital"] = countries[i].Capital;
-                dr["Total Area (sq km)"] = countries[i].Geography.TotalArea;
-                dr["Population"] = countries[i].Population.Amount;
-                dr["GDP nominal (mln usd)"] = countries[i].Economy.GDPnominal;
-                dr["GDP ppp (usd)"] = countries[i].Economy.GDPppp;
+                dr[Country.NameLabel] = countries[i].Name;
+                dr[Country.CapitalLabel] = countries[i].Capital;
+                dr[Geography.TotalAreaLabel] = countries[i].Geography.TotalArea;
+                dr[Population.AmountLabel] = countries[i].Population.Amount;
+                dr[Economy.GDPNominalLabel] = countries[i].Economy.GDPnominal;
+                dr[Economy.GDPpppLabel] = countries[i].Economy.GDPppp;
                 table.Rows.Add(dr);
             }
             countLabel.Text = countries.Length.ToString();
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void addbutton_Click(object sender, EventArgs e)
         {
-
+            AddForm form = new AddForm();
+            form.ShowDialog();
+            DataRow dr = table.NewRow();
+            dr[Country.NameLabel] = form.Country.Name;
+            dr[Country.CapitalLabel] = form.Country.Capital;
+            dr[Geography.TotalAreaLabel] = form.Country.Geography.TotalArea;
+            dr[Population.AmountLabel] = form.Country.Population.Amount;
+            dr[Economy.GDPNominalLabel] = form.Country.Economy.GDPnominal;
+            dr[Economy.GDPpppLabel] = form.Country.Economy.GDPppp;
+            table.Rows.Add(dr);
+            countLabel.Text = table.Rows.Count.ToString();
         }
 
         private void authorToolStripMenuItem_Click(object sender, EventArgs e)

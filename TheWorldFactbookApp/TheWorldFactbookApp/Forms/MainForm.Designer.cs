@@ -1,4 +1,4 @@
-﻿namespace TheWorldFactbookApp
+﻿namespace TheWorldFactbookApp.Forms
 {
     partial class MainForm
     {
@@ -156,7 +156,7 @@
             this.AddButton.TabIndex = 1;
             this.AddButton.Text = "Add";
             this.AddButton.UseVisualStyleBackColor = true;
-            this.AddButton.Click += new System.EventHandler(this.button1_Click);
+            this.AddButton.Click += new System.EventHandler(this.addbutton_Click);
             // 
             // UpdateButton
             // 
