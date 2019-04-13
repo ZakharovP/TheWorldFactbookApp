@@ -166,6 +166,7 @@
             this.UpdateButton.TabIndex = 2;
             this.UpdateButton.Text = "Update";
             this.UpdateButton.UseVisualStyleBackColor = true;
+            this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
             // 
             // FilterButton
             // 
