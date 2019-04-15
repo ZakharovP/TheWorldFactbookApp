@@ -41,27 +41,49 @@ namespace TheWorldFactbookApp.Forms
             for (int i = 0; i<countries.Length; i++)
             {
                 DataRow dr = table.NewRow();
-                dr[Country.NameLabel] = countries[i].Name;
-                dr[Country.CapitalLabel] = countries[i].Capital;
-                dr[Geography.TotalAreaLabel] = countries[i].Geography.TotalArea;
-                dr[Population.AmountLabel] = countries[i].Population.Amount;
-                dr[Economy.GDPNominalLabel] = countries[i].Economy.GDPnominal;
-                dr[Economy.GDPpppLabel] = countries[i].Economy.GDPppp;
+                UpdateDataRow(dr, countries[i]);
                 table.Rows.Add(dr);
             }
             countLabel.Text = countries.Length.ToString();
+        }
+        private void UpdateDataRow(DataRow dr, Country c)
+        {
+            dr[Country.NameLabel] = c.Name;
+            dr[Country.CapitalLabel] = c.Capital;
+            dr[Geography.TotalAreaLabel] = c.Geography.TotalArea;
+            dr[Population.AmountLabel] = c.Population.Amount;
+            dr[Economy.GDPNominalLabel] = c.Economy.GDPnominal;
+            dr[Economy.GDPpppLabel] = c.Economy.GDPppp;
+        }
+        private Country DataRow2Country(DataRow dr)
+        {
+            Country c = new Country()
+            {
+                Name = (string)dr[Country.NameLabel],
+                Capital = (string)dr[Country.CapitalLabel],
+                Geography = new Geography()
+                {
+                    TotalArea = (long)dr[Geography.TotalAreaLabel]
+                },
+                Population = new Population()
+                {
+                    Amount = (long)dr[Population.AmountLabel]
+                },
+                Economy = new Economy()
+                {
+                    GDPnominal = (long)dr[Economy.GDPNominalLabel],
+                    GDPppp = (long)dr[Economy.GDPpppLabel]
+                }
+            };
+            return c;
         }
         private void addbutton_Click(object sender, EventArgs e)
         {
             AddForm form = new AddForm();
             form.ShowDialog();
+            if (form.Country == null) return;
             DataRow dr = table.NewRow();
-            dr[Country.NameLabel] = form.Country.Name;
-            dr[Country.CapitalLabel] = form.Country.Capital;
-            dr[Geography.TotalAreaLabel] = form.Country.Geography.TotalArea;
-            dr[Population.AmountLabel] = form.Country.Population.Amount;
-            dr[Economy.GDPNominalLabel] = form.Country.Economy.GDPnominal;
-            dr[Economy.GDPpppLabel] = form.Country.Economy.GDPppp;
+            UpdateDataRow(dr, form.Country);
             table.Rows.Add(dr);
             countLabel.Text = table.Rows.Count.ToString();
         }
@@ -119,7 +141,12 @@ namespace TheWorldFactbookApp.Forms
             }
             else
             {
-
+                DataRow selRow = ((DataRowView)dataGridView1.SelectedRows[0].DataBoundItem).Row;
+                Country c = DataRow2Country(selRow);
+                UpdateForm form = new UpdateForm(c);
+                form.ShowDialog();
+                if (form.Country == null) return;
+                UpdateDataRow(selRow, form.Country);
             }
         }
     }
