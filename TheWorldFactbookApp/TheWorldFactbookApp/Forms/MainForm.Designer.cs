@@ -176,6 +176,7 @@
             this.FilterButton.TabIndex = 3;
             this.FilterButton.Text = "Filter";
             this.FilterButton.UseVisualStyleBackColor = true;
+            this.FilterButton.Click += new System.EventHandler(this.FilterButton_Click);
             // 
             // DeleteButton
             // 

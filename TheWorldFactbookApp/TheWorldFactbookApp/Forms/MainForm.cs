@@ -115,7 +115,7 @@ namespace TheWorldFactbookApp.Forms
                 DataRow[] dataRows = new DataRow[dataGridView1.SelectedRows.Count];
                 for (int i = 0; i< dataGridView1.SelectedRows.Count; i++)
                 {
-                    dataRows[i] = ((DataRowView)dataGridView1.SelectedRows[i].DataBoundItem).Row;
+                    dataRows[i] = table.Rows[i];
                 }
                 for (int i = 0; i < dataRows.Length; i++)
                 {
@@ -149,5 +149,82 @@ namespace TheWorldFactbookApp.Forms
                 UpdateDataRow(selRow, form.Country);
             }
         }
+
+        private void FilterButton_Click(object sender, EventArgs e)
+        {
+            Country min = new Country()
+            {
+                Geography = new Geography()
+                {
+                    TotalArea = long.MaxValue
+                },
+                Population = new Population()
+                {
+                    Amount = long.MaxValue
+                },
+                Economy = new Economy()
+                {
+                    GDPnominal = long.MaxValue,
+                    GDPppp = long.MaxValue
+                }
+            };
+            Country max = new Country()
+            {
+                Geography = new Geography()
+                {
+                    TotalArea = long.MinValue
+                },
+                Population = new Population()
+                {
+                    Amount = long.MinValue
+                },
+                Economy = new Economy()
+                {
+                    GDPnominal = long.MinValue,
+                    GDPppp = long.MinValue
+                }
+            };
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                Country c = DataRow2Country(table.Rows[i]);
+                min.Geography.TotalArea = Math.Min(c.Geography.TotalArea, min.Geography.TotalArea);
+                max.Geography.TotalArea = Math.Max(c.Geography.TotalArea, max.Geography.TotalArea);
+                min.Population.Amount = Math.Min(c.Population.Amount, min.Population.Amount);
+                max.Population.Amount = Math.Max(c.Population.Amount, max.Population.Amount);
+                min.Economy.GDPnominal = Math.Min(c.Economy.GDPnominal, min.Economy.GDPnominal);
+                max.Economy.GDPnominal = Math.Max(c.Economy.GDPnominal, max.Economy.GDPnominal);
+                min.Economy.GDPppp = Math.Min(c.Economy.GDPppp, min.Economy.GDPppp);
+                max.Economy.GDPppp = Math.Max(c.Economy.GDPppp, max.Economy.GDPppp);
+            }
+            FilterForm form = new FilterForm(min, max);
+            form.ShowDialog();
+            if (form.min == null || form.max == null)
+            {
+                return;
+            }
+            List<DataRow> dataRows = new List<DataRow>();
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                Country c = DataRow2Country(table.Rows[i]);
+                if (min.Geography.TotalArea > c.Geography.TotalArea ||
+                    max.Geography.TotalArea < c.Geography.TotalArea ||
+                    min.Population.Amount > c.Population.Amount ||
+                    max.Population.Amount < c.Population.Amount ||
+                    min.Economy.GDPnominal > c.Economy.GDPnominal ||
+                    max.Economy.GDPnominal < c.Economy.GDPnominal ||
+                    min.Economy.GDPppp > c.Economy.GDPppp ||
+                    max.Economy.GDPppp < c.Economy.GDPppp
+                    )
+                {
+                    dataRows.Add(table.Rows[i]);
+                }
+            }
+            for (int i = 0; i < dataRows.Count; i++)
+            {
+                table.Rows.Remove(dataRows[i]);
+            }
+            countLabel.Text = table.Rows.Count.ToString();
+        }
     }
 }
+
