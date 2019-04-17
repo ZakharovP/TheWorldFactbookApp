@@ -46,6 +46,7 @@
             this.DeleteButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.countLabel = new System.Windows.Forms.Label();
+            this.clearRegistryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -69,6 +70,7 @@
             this.openRecentToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
+            this.clearRegistryToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -88,6 +90,7 @@
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // openRecentToolStripMenuItem
             // 
@@ -210,6 +213,13 @@
             this.countLabel.TabIndex = 6;
             this.countLabel.Text = "label1";
             // 
+            // clearRegistryToolStripMenuItem
+            // 
+            this.clearRegistryToolStripMenuItem.Name = "clearRegistryToolStripMenuItem";
+            this.clearRegistryToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.clearRegistryToolStripMenuItem.Text = "Clear Registry";
+            this.clearRegistryToolStripMenuItem.Click += new System.EventHandler(this.clearRegistryToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -255,6 +265,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label countLabel;
         private System.Windows.Forms.ToolStripMenuItem cIAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearRegistryToolStripMenuItem;
     }
 }
 

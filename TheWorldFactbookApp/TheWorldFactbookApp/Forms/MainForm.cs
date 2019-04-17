@@ -16,6 +16,12 @@ namespace TheWorldFactbookApp.Forms
     public partial class MainForm : Form
     {
         DataTable table = new DataTable();
+        private const string ResourcesFolder = "Resources";
+        private const string AllCountriesFile = "CIACountries.xml";
+        private const string Title = "The World Factbook";
+        private const string NewTag = "New...";
+        private static string ResourcesFolderFull = Path.GetFullPath(ResourcesFolder);
+        private static string DefaultFile = Path.GetFullPath(Path.Combine(ResourcesFolder, AllCountriesFile));
         public MainForm()
         {
             InitializeComponent();
@@ -28,64 +34,28 @@ namespace TheWorldFactbookApp.Forms
             table.Columns.Add(Economy.GDPpppLabel, typeof(long));
             countLabel.Text = "0";
         }
+
+        private void UpdateCountLabel()
+        {
+            countLabel.Text = table.Rows.Count.ToString();
+        }
+
         private void Form_load(object sender, EventArgs e)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(Country[]));
-
-            String filename = Path.Combine("Resources", "CIACountries.xml");
-            Country[] countries;
-            using (StreamReader reader = new StreamReader(new FileStream(filename, FileMode.Open, FileAccess.Read)))
-            {
-                countries = (Country[])formatter.Deserialize(reader);
-            }
-            for (int i = 0; i<countries.Length; i++)
-            {
-                DataRow dr = table.NewRow();
-                UpdateDataRow(dr, countries[i]);
-                table.Rows.Add(dr);
-            }
-            countLabel.Text = countries.Length.ToString();
+            string filename = Utils.GetLastFile(DefaultFile);
+            Utils.SetCountries2Table(Utils.ReadCountries(filename), table);
+            UpdateCountLabel();
         }
-        private void UpdateDataRow(DataRow dr, Country c)
-        {
-            dr[Country.NameLabel] = c.Name;
-            dr[Country.CapitalLabel] = c.Capital;
-            dr[Geography.TotalAreaLabel] = c.Geography.TotalArea;
-            dr[Population.AmountLabel] = c.Population.Amount;
-            dr[Economy.GDPNominalLabel] = c.Economy.GDPnominal;
-            dr[Economy.GDPpppLabel] = c.Economy.GDPppp;
-        }
-        private Country DataRow2Country(DataRow dr)
-        {
-            Country c = new Country()
-            {
-                Name = (string)dr[Country.NameLabel],
-                Capital = (string)dr[Country.CapitalLabel],
-                Geography = new Geography()
-                {
-                    TotalArea = (long)dr[Geography.TotalAreaLabel]
-                },
-                Population = new Population()
-                {
-                    Amount = (long)dr[Population.AmountLabel]
-                },
-                Economy = new Economy()
-                {
-                    GDPnominal = (long)dr[Economy.GDPNominalLabel],
-                    GDPppp = (long)dr[Economy.GDPpppLabel]
-                }
-            };
-            return c;
-        }
+        
         private void addbutton_Click(object sender, EventArgs e)
         {
             AddForm form = new AddForm();
             form.ShowDialog();
             if (form.Country == null) return;
             DataRow dr = table.NewRow();
-            UpdateDataRow(dr, form.Country);
+            Utils.UpdateDataRow(dr, form.Country);
             table.Rows.Add(dr);
-            countLabel.Text = table.Rows.Count.ToString();
+            UpdateCountLabel();
         }
 
         private void authorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -121,7 +91,7 @@ namespace TheWorldFactbookApp.Forms
                 {
                     table.Rows.Remove(dataRows[i]) ;
                 }
-                countLabel.Text = table.Rows.Count.ToString();
+                UpdateCountLabel();
             } 
             else
             {
@@ -142,11 +112,11 @@ namespace TheWorldFactbookApp.Forms
             else
             {
                 DataRow selRow = ((DataRowView)dataGridView1.SelectedRows[0].DataBoundItem).Row;
-                Country c = DataRow2Country(selRow);
+                Country c = Utils.DataRow2Country(selRow);
                 UpdateForm form = new UpdateForm(c);
                 form.ShowDialog();
                 if (form.Country == null) return;
-                UpdateDataRow(selRow, form.Country);
+                Utils.UpdateDataRow(selRow, form.Country);
             }
         }
 
@@ -186,7 +156,7 @@ namespace TheWorldFactbookApp.Forms
             };
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                Country c = DataRow2Country(table.Rows[i]);
+                Country c = Utils.DataRow2Country(table.Rows[i]);
                 min.Geography.TotalArea = Math.Min(c.Geography.TotalArea, min.Geography.TotalArea);
                 max.Geography.TotalArea = Math.Max(c.Geography.TotalArea, max.Geography.TotalArea);
                 min.Population.Amount = Math.Min(c.Population.Amount, min.Population.Amount);
@@ -205,7 +175,7 @@ namespace TheWorldFactbookApp.Forms
             List<DataRow> dataRows = new List<DataRow>();
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                Country c = DataRow2Country(table.Rows[i]);
+                Country c = Utils.DataRow2Country(table.Rows[i]);
                 if (min.Geography.TotalArea > c.Geography.TotalArea ||
                     max.Geography.TotalArea < c.Geography.TotalArea ||
                     min.Population.Amount > c.Population.Amount ||
@@ -223,7 +193,36 @@ namespace TheWorldFactbookApp.Forms
             {
                 table.Rows.Remove(dataRows[i]);
             }
-            countLabel.Text = table.Rows.Count.ToString();
+            UpdateCountLabel();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.DefaultExt = "xml";
+            openFileDialog.Filter = "XML file (*.xml)|*.xml";
+            openFileDialog.InitialDirectory = ResourcesFolderFull;
+            DialogResult result = openFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = Path.GetFullPath(openFileDialog.FileName);
+                string foldername = Path.GetDirectoryName(filename);
+                string resourcefolder = Path.GetFullPath(ResourcesFolder);
+                if (foldername != ResourcesFolderFull)
+                {
+                    MessageBox.Show($@"Open: please open file from {ResourcesFolderFull}", @"Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                Utils.SetLastFile(filename);
+                Utils.SetCountries2Table(Utils.ReadCountries(filename), table);
+                UpdateCountLabel();
+            }
+        }
+
+        private void clearRegistryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Utils.ClearRegistry();
+            MessageBox.Show(@"Clear Registry: done", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
