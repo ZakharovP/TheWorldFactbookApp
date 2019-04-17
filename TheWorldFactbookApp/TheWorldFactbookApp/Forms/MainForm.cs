@@ -115,7 +115,7 @@ namespace TheWorldFactbookApp.Forms
                 DataRow[] dataRows = new DataRow[dataGridView1.SelectedRows.Count];
                 for (int i = 0; i< dataGridView1.SelectedRows.Count; i++)
                 {
-                    dataRows[i] = table.Rows[i];
+                    dataRows[i] = ((DataRowView)dataGridView1.SelectedRows[i].DataBoundItem).Row;
                 }
                 for (int i = 0; i < dataRows.Length; i++)
                 {
